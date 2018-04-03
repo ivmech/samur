@@ -12,7 +12,7 @@ INSTALL
 If you like to install from PiP, you can do it like so:
 
 ```bash
-pip install samur
+pip install samur 
 ```
 
 If you like to clone from source, you can do it like so:
