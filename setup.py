@@ -7,7 +7,7 @@ setup(
     author_email="cnr437@gmail.com",
     include_package_data=True,
     packages=find_packages(),
-    url="",
+    url="https://github.com/ivmech/samur",
     # license="LICENSE.txt",
     description="Samur MainBoard Python Module",
     # long_description=open("README.md").read(),
