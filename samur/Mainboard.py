@@ -6,6 +6,7 @@ from time import sleep
 
 from devices import ShiftRegister
 from devices import Multiplexer
+from devices import DigitalModule
 
 class Mainboard:
 
@@ -32,6 +33,9 @@ class Mainboard:
         self.relaysP = ShiftRegister(dataPinP, latchPinP, clockPinP)
         self.relaysR = ShiftRegister(dataPinR, latchPinR, clockPinR)
         self.lineInputs = Multiplexer(S0Pin, S1Pin, S2Pin, S3Pin, COMPin)
+
+        self.digitalModules = DigitalModule()
+        self.digitalModules.scan()
 
         self.RELAYS = {}
         self.INPUTS = []

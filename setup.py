@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="samur",
-    version="0.1.0",
+    version="0.2.0",
     author="Caner Durmusoglu",
     author_email="cnr437@gmail.com",
     include_package_data=True,
@@ -13,6 +13,6 @@ setup(
     # long_description=open("README.md").read(),
     # Dependent packages (distributions)
     install_requires=[
-        "RPi.GPIO",
+        "RPi.GPIO", "smbus2",
     ],
 )
