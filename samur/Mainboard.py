@@ -2,6 +2,7 @@ import os
 import sys
 import select
 import RPi.GPIO as GPIO
+import smbus2
 from time import sleep
 
 from devices import ShiftRegister
@@ -30,25 +31,29 @@ class Mainboard:
         S3Pin = 13
         COMPin = 7
 
+        # Number of Relays
+        relay_num = 12
+
         self.relaysP = ShiftRegister(dataPinP, latchPinP, clockPinP)
         self.relaysR = ShiftRegister(dataPinR, latchPinR, clockPinR)
         self.lineInputs = Multiplexer(S0Pin, S1Pin, S2Pin, S3Pin, COMPin)
-
-        self.digitalModules = DigitalModule()
-        self.digitalModules.scan()
+        self.digitalModules = self.scanModule()
 
         self.RELAYS = {}
         self.INPUTS = []
 
-        for i in range(12):
+        for i in range(relay_num):
             if i<8:
                 self.RELAYS["K"+str(i+1)] = (i, self.relaysP.output)
             else:
                 self.RELAYS["K"+str(i+1)] = (i-8, self.relaysR.output)
 
+        for j,m in enumerate(self.digitalModules):
+            for i in range(6):
+                self.RELAYS["K"+str(relay_num + j * 6 + i + 1)] = (i, m.output)
+
         for i in range(3):
             self.RELAYS["V"+str(i+1)] = (4+i, self.relaysR.output)
-
 
         for i in range(14):
             if i < 8:
@@ -62,7 +67,7 @@ class Mainboard:
             value = self.RELAYS[name]
             value[1](value[0], state)
         except:
-            raise
+            pass
 
     def digitalRead(self, name):
         inputs = self.lineInputs.read()
@@ -76,6 +81,17 @@ class Mainboard:
     def digitalReadAll(self):
         inputs = self.lineInputs.read()
         return inputs[:14]
+
+    def scanModule(self):
+        modules = []
+        bus = smbus2.SMBus(1)
+        for address in range(32,40):
+            try:
+                bus.read_byte(address)
+                modules.append(DigitalModule(address))
+            except:
+                pass
+        return modules
 
 if __name__ == "__main__":
     app = Mainboard()

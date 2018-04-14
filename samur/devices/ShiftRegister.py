@@ -32,9 +32,9 @@ class ShiftRegister:
         value => a state to pass to the pin, could be HIGH or LOW
         """
 
-    def setOutput(self, output_number, value):
+    def setOutput(self, pin_number, value):
         try:
-            self.outputs[output_number] = value
+            self.outputs[pin_number] = value
         except IndexError:
             raise ValueError("Invalid output number. Can be only an int from 0 to 7")
 
@@ -52,8 +52,8 @@ class ShiftRegister:
             GPIO.output(self.clock_pin, GPIO.HIGH)
         GPIO.output(self.latch_pin, GPIO.HIGH)
 
-    def output(self, output_number, value):
-        self.setOutput(output_number, value)
+    def output(self, pin_number, value):
+        self.setOutput(pin_number, value)
         self.latch()
 
     def outputAll(self, outputs):
