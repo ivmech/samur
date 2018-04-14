@@ -46,9 +46,9 @@ Features
 * [x] MainBoard
 * [x] Output Support
 * [x] Input Support
-* [ ] DigitalModule Support
+* [x] DigitalModule Support
 * [ ] AnalogModule Support
-* [ ] I2C Expansion Support
+* [x] I2C Expansion Support
 
 Authors
 -------
