@@ -32,7 +32,8 @@ class Mainboard:
         COMPin = 7
 
         # Number of Relays
-        relay_num = 12
+        self.relay_num = 12
+        self.input_num = 14
 
         self.relaysP = ShiftRegister(dataPinP, latchPinP, clockPinP)
         self.relaysR = ShiftRegister(dataPinR, latchPinR, clockPinR)
@@ -42,7 +43,7 @@ class Mainboard:
         self.RELAYS = {}
         self.INPUTS = []
 
-        for i in range(relay_num):
+        for i in range(self.relay_num):
             if i<8:
                 self.RELAYS["K"+str(i+1)] = (i, self.relaysP.output)
             else:
@@ -50,17 +51,20 @@ class Mainboard:
 
         for j,m in enumerate(self.digitalModules):
             for i in range(6):
-                self.RELAYS["K"+str(relay_num + j * 6 + i + 1)] = (i, m.output)
+                self.RELAYS["K"+str(self.relay_num + j * 6 + i + 1)] = (i, m.output)
 
         for i in range(3):
             self.RELAYS["V"+str(i+1)] = (4+i, self.relaysR.output)
 
-        for i in range(14):
+        for i in range(self.input_num):
             if i < 8:
-                self.INPUTS.append("L"+str(i+1))
+                self.INPUTS.append("L" + str(i+1))
             else:
-                self.INPUTS.append("D"+str(i+1-8))
+                self.INPUTS.append("D" + str(i+1-8))
 
+        for j,m in enumerate(self.digitalModules):
+            for i in range(6):
+                self.INPUTS.append("L" + str(j * 6 + i + 1 + 8))
 
     def digitalWrite(self, name, state):
         try:
@@ -70,17 +74,25 @@ class Mainboard:
             pass
 
     def digitalRead(self, name):
-        inputs = self.lineInputs.read()
-        try:
-            index = self.INPUTS.index(name)
-        except:
-            raise
-#        d = dict(zip(self.INPUTS, inputs))
-        return inputs[index]
+        if name in self.INPUTS[:self.input_num]:
+            inputs = self.lineInputs.read()
+            try:
+                index = self.INPUTS.index(name)
+            except:
+                pass
+            return inputs[index]
+        else:
+            n = self.INPUTS[self.input_num:].index(name)
+            m = n / 6
+            i = n % 6
+            value = self.digitalModules[m].read()
+            return int((value & (1 << i)) != 0)
 
     def digitalReadAll(self):
-        inputs = self.lineInputs.read()
-        return inputs[:14]
+        inputs = self.lineInputs.read()[:self.input_num]
+        for m in self.digitalModules:
+            inputs.extend([int(_) for _ in reversed(list("{0:08b}".format(m.read())))][:6])
+        return inputs
 
     def scanModule(self):
         modules = []

@@ -34,6 +34,7 @@ if __name__ == "__main__":
 
             MB.digitalWrite("K13", GPIO.HIGH)
             MB.digitalWrite("K20", GPIO.HIGH)
+
 #            sleep(0.1)
 #            MB.digitalWrite("K1", GPIO.LOW)
             sleep(relay_delay)
