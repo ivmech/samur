@@ -4,6 +4,7 @@ REQUIREMENTS
 --------
 
 * RPi.GPIO
+* smbus2
 * Python 2.7 to 3.6.
 
 INSTALL
