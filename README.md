@@ -38,6 +38,9 @@ MB = samur.Mainboard()
 MB.digitalWrite("K1", 1)    # K1 named relay output High
 MB.digitalWrite("K1", 0)    # K1 named relay output Low
 print MB.digitalReadAll()   # reading all inputs
+
+print MB.analogRead("A1")   # reading analog value
+MB.analogWrite("S1", 500)   # analog output
 ```
 
 Features
@@ -47,7 +50,7 @@ Features
 * [x] Output Support
 * [x] Input Support
 * [x] DigitalModule Support
-* [ ] AnalogModule Support
+* [X] AnalogModule Support
 * [x] I2C Expansion Support
 
 Authors
