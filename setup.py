@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="samur",
-    version="0.3.0",
+    version="0.3.2",
     author="Caner Durmusoglu",
     author_email="cnr437@gmail.com",
     include_package_data=True,

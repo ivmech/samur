@@ -44,7 +44,10 @@ class Mainboard:
 
         self.RELAYS = {}
         self.INPUTS = []
+        self.AINPUTS = []
+        self.AOUTPUTS = []
 
+        # Generate Relay Output Names
         for i in range(self.relay_num):
             if i<8:
                 self.RELAYS["K"+str(i+1)] = (i, self.relaysP.output)
@@ -55,18 +58,27 @@ class Mainboard:
             for i in range(6):
                 self.RELAYS["K"+str(self.relay_num + j * 6 + i + 1)] = (i, m.output)
 
+        # Generate Valve Output Names
         for i in range(3):
             self.RELAYS["V"+str(i+1)] = (4+i, self.relaysR.output)
 
+        # Generate Digital Input Names
         for i in range(self.input_num):
             if i < 8:
                 self.INPUTS.append("L" + str(i+1))
             else:
                 self.INPUTS.append("D" + str(i+1-8))
 
+        # Generate Digital Module Input Names
         for j,m in enumerate(self.digitalModules):
             for i in range(6):
                 self.INPUTS.append("L" + str(j * 6 + i + 1 + 8))
+
+        # Generate Analog Module Input Names
+        for j,m in enumerate(self.analogModules):
+            for i in range(4):
+                self.AINPUTS.append("A" + str(j * 4 + i + 1))
+                self.AOUTPUTS.append("S" + str(j * 4 + i + 1))
 
     def digitalWrite(self, name, state):
         try:
@@ -96,6 +108,20 @@ class Mainboard:
             inputs.extend([int(_) for _ in reversed(list("{0:08b}".format(m.read())))][:6])
         return inputs
 
+    def analogRead(self, name):
+        n = self.AINPUTS.index(name)
+        m = n / 4
+        i = n % 4
+        value = self.analogModules[m][0].read(i)
+        return value
+
+    def analogWrite(self, name, value):
+        n = self.AOUTPUTS.index(name)
+        m = n / 4
+        i = n % 4
+        self.analogModules[m][1].write(i, value)
+        
+
     def scanModule(self):
         modules = []
         bus = smbus2.SMBus(1)
@@ -113,7 +139,7 @@ class Mainboard:
         for address in range(104,111):
             try:
                 bus.read_byte(address)
-                modules.append(AnalogModule(address))
+                modules.append((AnalogModule.Input(address), AnalogModule.Output(address-7)))
             except:
                 pass
         return modules
