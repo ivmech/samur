@@ -12,7 +12,5 @@ setup(
     description="Samur MainBoard Python Module",
     # long_description=open("README.md").read(),
     # Dependent packages (distributions)
-    install_requires=[
-        "RPi.GPIO", "smbus2",
-    ],
+    install_requires=["RPi.GPIO","smbus2"],
 )
