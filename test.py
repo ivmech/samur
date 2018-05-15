@@ -8,7 +8,7 @@ import samur
 
 MB = samur.Mainboard()
 
-relay_delay = 0.07
+relay_delay = 0.1
 
 if __name__ == "__main__":
     try:

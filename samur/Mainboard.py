@@ -8,6 +8,7 @@ from time import sleep
 from devices import ShiftRegister
 from devices import Multiplexer
 from devices import DigitalModule
+from devices import AnalogModule
 
 class Mainboard:
 
@@ -39,6 +40,7 @@ class Mainboard:
         self.relaysR = ShiftRegister(dataPinR, latchPinR, clockPinR)
         self.lineInputs = Multiplexer(S0Pin, S1Pin, S2Pin, S3Pin, COMPin)
         self.digitalModules = self.scanModule()
+        self.analogModules = self.scanAnalogModule()
 
         self.RELAYS = {}
         self.INPUTS = []
@@ -101,6 +103,17 @@ class Mainboard:
             try:
                 bus.read_byte(address)
                 modules.append(DigitalModule(address))
+            except:
+                pass
+        return modules
+
+    def scanAnalogModule(self):
+        modules = []
+        bus = smbus2.SMBus(1)
+        for address in range(104,111):
+            try:
+                bus.read_byte(address)
+                modules.append(AnalogModule(address))
             except:
                 pass
         return modules
