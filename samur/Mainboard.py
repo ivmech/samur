@@ -17,13 +17,18 @@ class Mainboard:
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
 
-        dataPinP = 18   #pin 14 on the 74HC595
-        latchPinP = 17  #pin 12 on the 74HC595
-        clockPinP = 4   #pin 11 on the 74HC595
 
-        dataPinR = 24   #pin 14 on the 74HC595
-        latchPinR = 23  #pin 12 on the 74HC595
-        clockPinR = 27  #pin 11 on the 74HC595
+#        dataPinP = 18   #pin 14 on the 74HC595
+#        latchPinP = 17  #pin 12 on the 74HC595
+#        clockPinP = 4   #pin 11 on the 74HC595
+#
+#        dataPinR = 24   #pin 14 on the 74HC595
+#        latchPinR = 23  #pin 12 on the 74HC595
+#        clockPinR = 27  #pin 11 on the 74HC595
+
+        dataPin = 18   #pin 14 on the 74HC595
+        latchPin = 17  #pin 12 on the 74HC595
+        clockPin = 27  #pin 11 on the 74HC595
 
         # 74HC4067
         S0Pin = 5
@@ -36,8 +41,9 @@ class Mainboard:
         self.relay_num = 12
         self.input_num = 14
 
-        self.relaysP = ShiftRegister(dataPinP, latchPinP, clockPinP)
-        self.relaysR = ShiftRegister(dataPinR, latchPinR, clockPinR)
+#        self.relaysP = ShiftRegister(dataPinP, latchPinP, clockPinP)
+#        self.relaysR = ShiftRegister(dataPinR, latchPinR, clockPinR)
+        self.relays = ShiftRegister(dataPin, latchPin, clockPin)
         self.lineInputs = Multiplexer(S0Pin, S1Pin, S2Pin, S3Pin, COMPin)
         self.digitalModules = self.scanModule()
         self.analogModules = self.scanAnalogModule()
@@ -49,10 +55,11 @@ class Mainboard:
 
         # Generate Relay Output Names
         for i in range(self.relay_num):
-            if i<8:
-                self.RELAYS["K"+str(i+1)] = (i, self.relaysP.output)
-            else:
-                self.RELAYS["K"+str(i+1)] = (i-8, self.relaysR.output)
+#            if i<8:
+#                self.RELAYS["K"+str(i+1)] = (i, self.relaysP.output)
+#            else:
+#                self.RELAYS["K"+str(i+1)] = (i-8, self.relaysR.output)
+            self.RELAYS["K"+str(i+1)] = (i, self.relays.output)
 
         for j,m in enumerate(self.digitalModules):
             for i in range(6):
@@ -60,7 +67,7 @@ class Mainboard:
 
         # Generate Valve Output Names
         for i in range(3):
-            self.RELAYS["V"+str(i+1)] = (4+i, self.relaysR.output)
+            self.RELAYS["V"+str(i+1)] = (4+i, self.relays.output)
 
         # Generate Digital Input Names
         for i in range(self.input_num):

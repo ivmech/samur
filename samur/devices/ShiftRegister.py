@@ -17,7 +17,7 @@ class ShiftRegister:
         GPIO.setup(self.latch_pin, GPIO.OUT)
         GPIO.setup(self.clock_pin, GPIO.OUT)
 
-        self.outputs = [GPIO.LOW] * 8
+        self.outputs = [GPIO.LOW] * 16
         """
         output_number => Value from 0 to 7 pointing to the output pin on the 74HC595
         0 => Q0 pin 15 on the 74HC595
@@ -39,14 +39,14 @@ class ShiftRegister:
             raise ValueError("Invalid output number. Can be only an int from 0 to 7")
 
     def setOutputs(self, outputs):
-        if 8 != len(outputs):
+        if 16 != len(outputs):
             raise ValueError("setOutputs must be an array with 8 elements")
         self.outputs = outputs
 
     def latch(self):
         GPIO.output(self.latch_pin, GPIO.LOW)
 
-        for i in range(7, -1, -1):
+        for i in range(15, -1, -1):
             GPIO.output(self.clock_pin, GPIO.LOW)
             GPIO.output(self.data_pin, self.outputs[i])
             GPIO.output(self.clock_pin, GPIO.HIGH)
