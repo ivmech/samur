@@ -67,7 +67,7 @@ class Mainboard:
 
         # Generate Valve Output Names
         for i in range(3):
-            self.RELAYS["V"+str(i+1)] = (4+i, self.relays.output)
+            self.RELAYS["V"+str(i+1)] = (self.relay_num+i, self.relays.output)
 
         # Generate Digital Input Names
         for i in range(self.input_num):
